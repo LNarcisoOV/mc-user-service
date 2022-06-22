@@ -41,7 +41,7 @@ public class UserController {
     public ResponseEntity<Role> save(@RequestBody Role role) {
         return ResponseEntity.ok().body(userService.save(role));
     }
-    
+
     @PostMapping("/{username}/{roleName}")
     public void save(@PathVariable String username, @PathVariable String roleName) {
         userService.addRoleToUser(username, roleName);
