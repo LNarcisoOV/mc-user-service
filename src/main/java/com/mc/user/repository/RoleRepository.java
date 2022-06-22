@@ -1,4 +1,4 @@
-package com.mc.user.service;
+package com.mc.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.mc.user.domain.Role;
