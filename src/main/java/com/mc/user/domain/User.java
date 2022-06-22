@@ -1,5 +1,6 @@
 package com.mc.user.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import javax.persistence.Entity;
@@ -71,6 +72,9 @@ public class User {
     }
 
     public Collection<Role> getRoles() {
+        if(roles == null) {
+            roles = new ArrayList<Role>();
+        }
         return roles;
     }
 
