@@ -1,5 +1,6 @@
 package com.mc.user.controller;
 
+import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.mc.user.domain.Role;
 import com.mc.user.domain.User;
 import com.mc.user.service.UserService;
@@ -34,17 +36,20 @@ public class UserController {
 
     @PostMapping("/")
     public ResponseEntity<User> save(@RequestBody User user) {
-        return ResponseEntity.ok().body(userService.save(user));
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/").toString());
+        return ResponseEntity.created(uri).body(userService.save(user));
     }
 
     @PostMapping("/role")
     public ResponseEntity<Role> save(@RequestBody Role role) {
-        return ResponseEntity.ok().body(userService.save(role));
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/user/role").toString());
+        return ResponseEntity.created(uri).body(userService.save(role));
     }
 
     @PostMapping("/{username}/{roleName}")
-    public void save(@PathVariable String username, @PathVariable String roleName) {
+    public ResponseEntity<?> addRoleToUser(@PathVariable String username, @PathVariable String roleName) {
         userService.addRoleToUser(username, roleName);
+        return ResponseEntity.ok().build();
     }
 
 }
