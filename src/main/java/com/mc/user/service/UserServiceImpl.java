@@ -1,9 +1,15 @@
 package com.mc.user.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.mc.user.domain.Role;
 import com.mc.user.domain.User;
@@ -12,7 +18,7 @@ import com.mc.user.repository.UserRepository;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -23,6 +29,25 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            LOGGER.info("User not found in the database.");
+            throw new UsernameNotFoundException("User not found in the database.");
+        }
+
+        LOGGER.info("User found in the database {}.", username);
+
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(), authorities);
+    }
+
 
     @Override
     public User save(User user) {
@@ -40,7 +65,7 @@ public class UserServiceImpl implements UserService {
     public void addRoleToUser(String username, String roleName) {
         LOGGER.info("Adding new role {} to the user {}.", roleName, username);
         User userDB = userRepository.findByUsername(username);
-        Role roleDB = roleRepository.findByName(roleName);  
+        Role roleDB = roleRepository.findByName(roleName);
         userDB.getRoles().add(roleDB);
 
     }
