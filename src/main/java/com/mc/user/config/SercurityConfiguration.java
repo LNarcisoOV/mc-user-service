@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import com.mc.user.filter.CustomAuthenticationFilter;
+import com.mc.user.filter.CustomAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +48,7 @@ public class SercurityConfiguration {
         .and()
         .authorizeRequests().anyRequest().authenticated()
         .and()
+        .addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
         .addFilter(new CustomAuthenticationFilter(authenticationManager))
         .headers().frameOptions().disable()
         .and()
