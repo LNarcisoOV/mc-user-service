@@ -18,7 +18,7 @@ import com.mc.user.filter.CustomAuthorizationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class SercurityConfiguration {
+public class SecurityConfiguration {
     
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,7 +40,7 @@ public class SercurityConfiguration {
         .and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
-        .authorizeRequests().antMatchers("/h2-console/**").permitAll()
+        .authorizeRequests().antMatchers("/login/**", "/h2-console/**", "/token/refresh/**").permitAll()
         .and()
         .authorizeRequests().antMatchers(HttpMethod.GET, "/user/**").hasAuthority("ROLE_USER")
         .and()

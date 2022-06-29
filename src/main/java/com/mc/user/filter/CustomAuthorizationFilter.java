@@ -33,7 +33,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
-        if(request.getServletContext().equals("/login") || request.getServletContext().equals("/h2-console")) {
+        if(isAFreeEndpoint(request)) {
             filterChain.doFilter(request, response);
         } else {
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -69,6 +69,10 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         }
+    }
+
+    private boolean isAFreeEndpoint(HttpServletRequest request) {
+        return request.getServletPath().equals("/login") || request.getServletPath().equals("/h2-console") || request.getServletPath().equals("/token/refresh");
     }
 
 }
