@@ -44,7 +44,7 @@ public class SecurityConfiguration {
         .and()
         .authorizeRequests().antMatchers(HttpMethod.GET, "/user/**").hasAuthority("ROLE_USER")
         .and()
-        .authorizeRequests().antMatchers(HttpMethod.POST, "/user/**").hasAuthority("ROLE_USER")
+        .authorizeRequests().antMatchers(HttpMethod.POST, "/user/**").hasAuthority("ROLE_ADMIN")
         .and()
         .authorizeRequests().anyRequest().authenticated()
         .and()
