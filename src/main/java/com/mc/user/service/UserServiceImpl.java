@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
+        final User user = userRepository.findByUsername(username);
         if (user == null) {
             LOGGER.info("User not found in the database.");
             throw new UsernameNotFoundException("User not found in the database.");
@@ -67,8 +67,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void addRoleToUser(String username, String roleName) {
         LOGGER.info("Adding new role {} to the user {}.", roleName, username);
-        User userDB = userRepository.findByUsername(username);
-        Role roleDB = roleRepository.findByName(roleName);
+        final User userDB = userRepository.findByUsername(username);
+        final Role roleDB = roleRepository.findByName(roleName);
         userDB.getRoles().add(roleDB);
 
     }
